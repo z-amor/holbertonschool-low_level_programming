@@ -1,0 +1,1 @@
+This is a readme about if else in c
