@@ -9,6 +9,11 @@
 *    If you are using a linux on Vagrant you might have to install the package libc6-dev-i386 to test the -m32 gcc option (normally you dont need to do anything on your sandbox).
 */
 
+/**
+* main - Entry point
+*
+* Return: Always 0 (Success)
+*/
 int main(void)
 {
 	printf("Size of a char: %lu byte(s)\n", sizeof(char));
