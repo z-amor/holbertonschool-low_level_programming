@@ -6,5 +6,20 @@
 */
 int main(void)
 {
-__k8
+int n;
+char a;
+n = 0;
+while (n < 10)
+{
+putchar(n + '0');
+n++;
+}
+a = 'a';
+while (a <= 'f')
+{
+putchar(a);
+a++;
+}
+putchar('\n');
+return (0);
 }
