@@ -15,8 +15,5 @@ _putchar('_');
 n--;
 }
 }
-else
-{
 _putchar('\n');
-}
 }
