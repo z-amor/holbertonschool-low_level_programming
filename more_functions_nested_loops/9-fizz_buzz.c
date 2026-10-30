@@ -9,10 +9,9 @@
 void fizz_buzz(void)
 {
 int i;
-
 for (i = 1; i <= 100; i++)
 {
-if (i % 15 == 0)
+if (i % 3 == 0 && i % 5 == 0)
 {
 _putchar('F');
 _putchar('i');
@@ -39,7 +38,16 @@ _putchar('z');
 }
 else
 {
-_printf("%d", i);
+if (i >= 100)
+{
+_putchar('1');
+_putchar('0');
+}
+else if (i >= 10)
+{
+_putchar((i / 10) + '0');
+}
+_putchar((i % 10) + '0');
 }
 if (i < 100)
 {
