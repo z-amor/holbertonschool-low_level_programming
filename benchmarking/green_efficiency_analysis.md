@@ -4,7 +4,7 @@ Measurement Methodology
 
 To systematically evaluate code execution efficiency, benchmarking experiments were conducted across three distinct C program tasks using a controlled Linux environment. All source code was compiled using standard strict compilation flags (-Wall -Werror -Wextra -pedantic -std=gnu89 -Wno-long-long) without optimization flags to evaluate pure algorithmic complexity and execution overhead.
 
-Execution times were recorded using the standard C library <time.h> facility via the clock() function. Runtimes were converted to seconds using the standard system macro CLOCKS_PER_SEC. To mitigate background system noise and CPU scheduling variations, each benchmark was executed across multiple consecutive iterations to determine timing stability and average execution performance.
+Execution times were recorded using the standard C library  facility via the clock() function. Runtimes were converted to seconds using the standard system macro CLOCKS_PER_SEC. To mitigate background system noise and CPU scheduling variations, each benchmark was executed across multiple consecutive iterations to determine timing stability and average execution performance.
 
 Measurement boundaries were established strictly around computational loops and algorithm phases. In the multi-phase instrumentation experiment, timers were placed before and after each phase (BUILD_DATA, PROCESS, REDUCE) as well as across the overall program lifespan (TOTAL) to verify internal consistency and quantify system call overhead.
 
@@ -13,22 +13,22 @@ Observed Performance Differences
 Across the recorded benchmarks, performance disparities highlighted the substantial impact of algorithmic complexity and operational weight:
 
 1. Baseline Loop Stability : 
-   Across three consecutive runs of a deterministic $10^8$ iteration loop (baseline_loop.c), execution times yielded 0.176477s, 0.185758s, and 0.176340s. This demonstrated minor system scheduling variance (~9.4 ms peak variation) with an average execution time of ~0.179525 seconds.
+Across three consecutive runs of a deterministic $10^8$ iteration loop (baseline_loop.c), execution times yielded 0.176477s, 0.185758s, and 0.176340s. This demonstrated minor system scheduling variance (~9.4 ms peak variation) with an average execution time of ~0.179525 seconds.
 
 2. Algorithmic Scaling Disparity :
-   The comparison benchmark (comparison_algorithms.c) evaluated a quadratic nested loop algorithm against a linear single-pass algorithm over an array size of 50,000 elements.
-   * Naive ($O(n^2)$) Algorithm : Averaged 1.760683 seconds across three runs (1.770652s, 1.738730s, 1.772666s).
-   * Single-Pass ($O(n)$) Algorithm : Averaged 0.0000853 seconds across three runs (0.000083s, 0.000087s, 0.000086s).
+The comparison benchmark (comparison_algorithms.c) evaluated a quadratic nested loop algorithm against a linear single-pass algorithm over an array size of 50,000 elements.
+* Naive ($O(n^2)$) Algorithm : Averaged 1.760683 seconds across three runs (1.770652s, 1.738730s, 1.772666s).
+* Single-Pass ($O(n)$) Algorithm : Averaged 0.0000853 seconds across three runs (0.000083s, 0.000087s, 0.000086s).
    
-   The single-pass algorithm outperformed the naive implementation by a factor of approximately 20,634 times.
+The single-pass algorithm outperformed the naive implementation by a factor of approximately 20,634 times.
 
 3. Phase-Level Execution Breakdown:
-   The instrumented multi-phase dataset experiment (instrumentation_lab.c) yielded a overall total time of 0.001217 seconds, distributed across internal computational phases:
-   * BUILD_DATA : 0.000490 seconds (~40.26% of total time)
-   * PROCESS : 0.000488 seconds (~40.10% of total time)
-   * REDUCE : 0.000233 seconds (~19.15% of total time)
+The instrumented multi-phase dataset experiment (instrumentation_lab.c) yielded a overall total time of 0.001217 seconds, distributed across internal computational phases:
+* BUILD_DATA : 0.000490 seconds (~40.26% of total time)
+* PROCESS : 0.000488 seconds (~40.10% of total time)
+* REDUCE : 0.000233 seconds (~19.15% of total time)
 
-   The combined time of the sub-phases (0.001211 seconds) was slightly less than the total measured execution time (0.001217 seconds), confirming a tiny timing measurement overhead of 0.000006 seconds.
+The combined time of the sub-phases (0.001211 seconds) was slightly less than the total measured execution time (0.001217 seconds), confirming a tiny timing measurement overhead of 0.000006 seconds.
 
 Relation Between Runtime and Energy Consumption
 
