@@ -10,17 +10,16 @@ int i, div, num;
 for (i = 0; i < n; i++)
 {
 num = a[i];
-/* 1. On gère d'abord le séparateur entre les éléments */
 if (i != 0)
 {
 _putchar(',');
+_putchar(' ');
 }
-/* 2. Ensuite on affiche le signe moins si le nombre est négatif */
 if (num < 0)
 {
 _putchar('-');
 }
-/* 3. Enfin, on affiche la valeur numérique */
+
 if (num == 0)
 {
 _putchar('0');
