@@ -6,7 +6,7 @@
  */
 void print_array(int *a, int n)
 {
-int i, j, div, num;
+int i, div, num;
 for (i = 0; i < n; i++)
 {
 num = a[i];
