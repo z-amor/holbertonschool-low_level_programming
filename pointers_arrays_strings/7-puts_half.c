@@ -13,6 +13,8 @@ while (str[l] != '\0')
 {
 l++;
 }
+/* On calcule l'indice de départ correct pour pair et impair */
+i = l - (l / 2);
 for (i = l / 2; str[i] != '\0'; i++)
 {
 _putchar(str[i]);
