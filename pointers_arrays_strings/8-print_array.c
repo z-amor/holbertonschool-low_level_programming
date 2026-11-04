@@ -1,5 +1,4 @@
 #include "main.h"
-
 /**
  * print_array - prints n elements of an array of integers, followed by a new line.
  * @a: pointer to the array
