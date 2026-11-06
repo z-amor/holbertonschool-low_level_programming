@@ -4,7 +4,7 @@ char *leet(char *s)
     char letters[] = "aAeEoOtTlL";
     char numbers[] = "4433007711";
 
-    char *1;
+    char *l;
     char *n;
 
     while (*s != '\0')
@@ -12,7 +12,7 @@ char *leet(char *s)
         l = letters;
         n = numbers;
 
-        
+
         while (*l != '\0')
         {
             if (*s == *l)
@@ -22,9 +22,7 @@ char *leet(char *s)
             l++;
             n++;
         }
-        s++
+        s++;
     }
-
-
     return (start);
 }
