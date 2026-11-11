@@ -11,25 +11,28 @@
 char *_strdup(char *str)
 {
 char *dup;
-unsigned int i, len;
+int len, i;
 if (str == NULL)
 {
 return (NULL);
 }
-/* Calcul de la longueur de la chaîne */
-for (len = 0; str[len] != '\0'; len++)
+/* Calculate the length of the string */
+len = 0;
+while (str[len] != '\0')
 {
-/* Allocation de la mémoire (+1 pour le caractère '\0') */
-dup = malloc(sizeof(char) * (len + 1));
+len++;
 }
+/* Allocate memory for the duplicate string */
+dup = malloc((len + 1) * sizeof(char));
 if (dup == NULL)
 {
 return (NULL);
 }
-/* Copie de la chaîne (incluant '\0')*/
-for (i = 0; i <= len; i++)
+/* Copy the string to the newly allocated memory */
+for (i = 0; i < len; i++)
 {
 dup[i] = str[i];
 }
+dup[len] = '\0'; 
 return (dup);
 }
