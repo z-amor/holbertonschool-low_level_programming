@@ -1,6 +1,5 @@
-#include <stdlib.h>
 #include "main.h"
-
+#include <stdlib.h>
 /**
  * _strdup - Returns a pointer to a newly allocated space in memory,
  *           which contains a copy of the string given as a parameter.
@@ -27,7 +26,7 @@ if (dup == NULL)
 {
 return (NULL);
 }
-/* Copie de la chaîne (incluant '\0') */
+/* Copie de la chaîne (incluant '\0')*/
 for (i = 0; i <= len; i++)
 {
 dup[i] = str[i];
