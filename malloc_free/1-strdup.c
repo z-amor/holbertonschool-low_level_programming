@@ -33,6 +33,6 @@ for (i = 0; i < len; i++)
 {
 dup[i] = str[i];
 }
-dup[len] = '\0'; 
+dup[len] = '\0';
 return (dup);
 }
