@@ -19,11 +19,14 @@ printf("Enter your choice: ");
 scanf("%d", &choice);
 if (choice > 4 || choice < 0)
 {
-printf("Invalid choice.");
+printf("Invalid choice\n");
+}
+else if (choice != 0)
+{
 }
 if (choice == 0)
 {
-printf("Bye!");
+printf("Bye!\n");
 }
 }
 return (0);
