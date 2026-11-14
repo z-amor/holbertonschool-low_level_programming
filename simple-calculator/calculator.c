@@ -26,11 +26,35 @@ printf("B: ");
 scanf("%d", &b);
 printf("Result: %d\n", a + b);
 }
-if (choice > 4 || choice < 0)
+else if (choice == 2)
+{
+printf("A: ");
+scanf("%d", &a);
+printf("B: ");
+scanf("%d", &b);
+printf("Result: %d\n", a - b);
+}
+else if (choice == 3)
+{
+printf("A: ");
+scanf("%d", &a);
+printf("B: ");
+scanf("%d", &b);
+printf("Result: %d\n", a * b);
+}
+else if (choice == 4)   
+{
+printf("A: ");
+scanf("%d", &a);
+printf("B: ");
+scanf("%d", &b);
+printf("Result: %d\n", a / b);
+}
+else if (choice > 4 || choice < 0)
 {
 printf("Invalid choice\n");
 }
-if (choice == 0)
+else if (choice == 0)
 {
 printf("Bye!\n");
 }
