@@ -17,6 +17,13 @@ printf("4. Divide\n");
 printf("0. Exit\n");
 printf("Enter your choice: ");
 scanf("%d", &choice);
+if (choice > 4 || choice < 0)
+{
+printf("Invalid choice.\n");
+}
+if (choice == 0)
+{
+printf("Bye!\n");
 }
 return (0);
 }
