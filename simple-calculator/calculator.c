@@ -7,6 +7,7 @@
 int main(void)
 {
 int choice = -1;
+int a, b;
 while (choice != 0)
 {
 printf("Welcome to the Simple Calculator!\nChoose an operation:\n");
