@@ -25,5 +25,6 @@ if (choice == 0)
 {
 printf("Bye!\n");
 }
+}
 return (0);
 }
