@@ -67,7 +67,7 @@ valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./h
 * **Flawed AI explanation:** When asked to predict and explain Valgrind's output for `aliasing_example.c`, an initial AI response stated: *"After `free(a)` resets `b`, Valgrind reports its first invalid read at line 40 (`printf("  after free(a): b=%p (dangling)\n", (void *)b);`) because `b` is used after `free(a)`."*
 * **Why it is incorrect:**
   1. free() does not reset pointers: free(a) deallocates the heap block at 0x4a9d480, leaving b completely unchanged as a dangling pointer holding 0x4a9d480.
-  2. Reading a pointer's own value vs. dereferencing it: Line 40 reads the value of the local stack variable b (main's stack frame, which is still `LIVE`) and formats it with %p. It never dereferences b to access the freed heap block. While GCC's static analyzer emits a -Wuse-after-free warning on line 40 for using a pointer value after free, Valgrind's Memcheck instruments memory accesses and therefore reports zero errors on line 40—its first reported error occurs at line 42 (b[2]), where b is actually dereferenced to read 4 bytes at 0x4a9d488.
+  2. Reading a pointer's own value vs. dereferencing it: Line 40 reads the value of the local stack variable b (main's stack frame, which is still LIVE) and formats it with %p. It never dereferences b to access the freed heap block. While GCC's static analyzer emits a -Wuse-after-free warning on line 40 for using a pointer value after free, Valgrind's Memcheck instruments memory accesses and therefore reports zero errors on line 40—its first reported error occurs at line 42 (b[2]), where b is actually dereferenced to read 4 bytes at 0x4a9d488.
 
 ### Case 2: Misidentifying the Leaked Object in `heap_example.c`
 

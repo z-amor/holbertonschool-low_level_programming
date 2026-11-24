@@ -49,9 +49,9 @@ The crash is a **deterministic null pointer dereference** caused by passing `n =
 
 ### Case 1:
 
-* **Flawed AI explanation:** — *"The crash happens because `malloc` failed due to out-of-memory or heap corruption when allocating `nums`."* (Incorrect / Speculative)**
+* **Flawed AI explanation:** — *"The crash happens because `malloc` failed due to out-of-memory or heap corruption when allocating `nums`."* (Incorrect / Speculative)
    * **Why it is wrong:** malloc is never executed. Because n is 0, allocate_numbers(0) takes the early return if (n <= 0) return NULL; on lines 9–10 before reaching malloc on line 12. Attributing the NULL pointer to allocator exhaustion or heap corruption ignores the explicit precondition guard in the source code.
 ### Case 2:
 
-* **Flawed AI explanation:** — *"The program crashes before executing its `printf` statements because `nums[0] = 42` triggers a segfault."* (Incomplete / Misleading)**
+* **Flawed AI explanation:** — *"The program crashes before executing its `printf` statements because `nums[0] = 42` triggers a segfault."* (Incomplete / Misleading)
    * **Why it is wrong:** Both printf calls on lines 27–28 execute before line 32 faults, as confirmed directly in interactive terminal output (crash_example: deterministic NULL dereference... followed by requesting n=0). When stdout is redirected to a pipe or file (block-buffered mode), those bytes remain unflushed inside libc's stdout buffer when SIGSEGV kills the process—which is a stdio buffering effect, not evidence that printf never ran.
