@@ -47,26 +47,11 @@ The crash is a **deterministic null pointer dereference** caused by passing `n =
 
 ## 4. Critique of AI-Provided Explanations
 
-1. **AI Claim 1 — *"The crash happens because `malloc` failed due to out-of-memory or heap corruption when allocating `nums`."* (Incorrect / Speculative)**
-   * **Why it is wrong:** `malloc` is never executed. Because `n` is `0`, `allocate_numbers(0)` takes the early return `if (n <= 0) return NULL;` on lines 9–10 before reaching `malloc` on line 12. Attributing the `NULL` pointer to allocator exhaustion or heap corruption ignores the explicit precondition guard in the source code.
-2. **AI Claim 2 — *"The program crashes before executing its `printf` statements because `nums[0] = 42` triggers a segfault."* (Incomplete / Misleading)**
-   * **Why it is wrong:** Both `printf` calls on lines 27–28 execute before line 32 faults, as confirmed directly in interactive terminal output (`crash_example: deterministic NULL dereference...` followed by `requesting n=0`). When `stdout` is redirected to a pipe or file (block-buffered mode), those bytes remain unflushed inside libc's `stdout` buffer when `SIGSEGV` kills the process—which is a stdio buffering effect, not evidence that `printf` never ran.
-3. **AI Claim 3 — *"`allocate_numbers(0)` returns `NULL` for `n <= 0`, and `main` writes `42` to `nums[0]` without a `NULL` check, causing a deterministic `SIGSEGV` at `0x0`."* (Correct)**
-   * **Why it is accurate:** It links the `n = 0` argument, the early `NULL` return, the missing `NULL` guard in `main`, and the resulting invalid write to unmapped address `0x0` without relying on speculation.
+### Case 1:
 
----
+**AI Claim — *"The crash happens because `malloc` failed due to out-of-memory or heap corruption when allocating `nums`."* (Incorrect / Speculative)**
+   * **Why it is wrong:** malloc is never executed. Because n is 0, allocate_numbers(0) takes the early return if (n <= 0) return NULL; on lines 9–10 before reaching malloc on line 12. Attributing the NULL pointer to allocator exhaustion or heap corruption ignores the explicit precondition guard in the source code.
+### Case 2:
 
-## 5. Suggested Fix (Optional)
-
-Validate `nums != NULL` immediately after `allocate_numbers(n)` (and pass a positive element count `n > 0` when an allocation is intended):
-
-```c
-    nums = allocate_numbers(n);
-    if (!nums)
-    {
-        fprintf(stderr, "Error: allocate_numbers(%d) returned NULL\n", n);
-        return 1;
-    }
-
-    nums[0] = 42;
-```
+**AI Claim 2 — *"The program crashes before executing its `printf` statements because `nums[0] = 42` triggers a segfault."* (Incomplete / Misleading)**
+   * **Why it is wrong:** Both printf calls on lines 27–28 execute before line 32 faults, as confirmed directly in interactive terminal output (crash_example: deterministic NULL dereference... followed by requesting n=0). When stdout is redirected to a pipe or file (block-buffered mode), those bytes remain unflushed inside libc's stdout buffer when SIGSEGV kills the process—which is a stdio buffering effect, not evidence that printf never ran.
