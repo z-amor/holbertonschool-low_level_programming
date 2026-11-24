@@ -154,23 +154,23 @@ Once `free(a)` releases the chunk, glibc's allocator places it onto a free list 
 
 * **Flawed AI explanation:** *"In `stack_example.c`, `p_local` at `[exit] depth=0` still points to the same `local_int` created at `[enter] depth=0`, and every `dump_frame` call gets its own unique stack address."*
 * **Why it is wrong/incomplete:**
-  1. `dump_frame("enter", 0)` and `dump_frame("exit", 0)` are two separate function calls. The `local_int` from `"enter"` ended its lifetime when `dump_frame("enter", 0)` returned; `"exit"` creates a brand-new `local_int` and sets its own `p_local` to `&local_int`.
-  2. Addresses are unique per *active stack depth*, not per total call count—popped frames are reused by subsequent calls at the same depth, which is why `"enter"` and `"exit"` print identical addresses.
-* **Correction:** Explicitly separate **storage lifetime** (per call) from **stack address** (per active stack position), and note that `p_local` only aliases the `local_int` belonging to the currently executing `dump_frame` call.
+  1. dump_frame("enter", 0) and dump_frame("exit", 0) are two separate function calls. The local_int from "enter" ended its lifetime when dump_frame("enter", 0) returned; "exit" creates a brand-new local_int and sets its own p_local to &local_int.
+  2. Addresses are unique per active stack depth, not per total call count—popped frames are reused by subsequent calls at the same depth, which is why "enter" and "exit" print identical addresses.
+* **Correction:** Explicitly separate storage lifetime (per call) from stack address (per active stack position), and note that p_local only aliases the local_int belonging to the currently executing dump_frame call.
 
 ### Case 2: `heap_example.c` — Misidentifying Which Allocation Leaks
 
 * **Flawed AI explanation:** *"`person_free_partial(alice)` leaks `alice` because it does not completely free the struct."*
-* **Why it is wrong/incomplete:** `free(p)` inside `person_free_partial(alice)` **does** free the `Person` struct itself (`...92b0`). What actually leaks is the **separate 6-byte heap block** holding `"Alice\0"` (`...92d0`).
-* **Correction:** Model `Person` as a two-level heap ownership structure. Freeing the outer `Person` struct first destroys the only pointer (`alice->name`) to the inner string buffer, leaving the 6-byte string buffer orphaned (**definitely lost**).
+* **Why it is wrong/incomplete:** free(p) inside person_free_partial(alice) does free the Person struct itself (...92b0). What actually leaks is the separate 6-byte heap block holding "Alice\0" (...92d0).
+* **Correction:** Model Person as a two-level heap ownership structure. Freeing the outer Person struct first destroys the only pointer (alice->name) to the inner string buffer, leaving the 6-byte string buffer orphaned (definitely lost).
 
 ### Case 3: `aliasing_example.c` — Assuming `free()` Nullifies Pointers or Always Causes a Crash
 
 * **Flawed AI explanation:** *"After `free(a)`, `b` becomes invalid/NULL, so reading `b[2]` causes a segmentation fault."*
 * **Why it is wrong/incomplete:**
-  1. `free(a)` never modifies pointer variables (`a` and `b` both keep `0x5557869f82b0`).
-  2. Saying *"points to invalid memory"* obscures aliasing and lifetime: `b` is a dangling pointer to a freed heap chunk that is still mapped in the process's address space, which is why the program exits with code `0` while reading overwritten allocator metadata (`-2042119340`).
-* **Correction:** Document the `a`/`b` alias explicitly, distinguish pointer value from heap object lifetime, and explain both GCC's `-Werror=use-after-free` static check and the runtime allocator metadata overwrite.
+  1. free(a) never modifies pointer variables (a and b both keep 0x5557869f82b0).
+  2. Saying "points to invalid memory" obscures aliasing and lifetime: b is a dangling pointer to a freed heap chunk that is still mapped in the process's address space, which is why the program exits with code 0 while reading overwritten allocator metadata (-2042119340).
+* **Correction:** Document the a/b alias explicitly, distinguish pointer value from heap object lifetime, and explain both GCC's -Werror=use-after-free static check and the runtime allocator metadata overwrite.
 
 ---
 
