@@ -62,17 +62,17 @@ valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./h
 
 ## 3. Critical Verification of AI Explanations
 
-### Instance 1: Misidentifying Which Line Triggers Valgrind's First Error in `aliasing_example.c`
+### Case 1: Misidentifying Which Line Triggers Valgrind's First Error in `aliasing_example.c`
 
 * **Flawed AI explanation:** When asked to predict and explain Valgrind's output for `aliasing_example.c`, an initial AI response stated: *"After `free(a)` resets `b`, Valgrind reports its first invalid read at line 40 (`printf("  after free(a): b=%p (dangling)\n", (void *)b);`) because `b` is used after `free(a)`."*
 * **Why it is incorrect:**
-  1. **`free()` does not reset pointers:** `free(a)` deallocates the heap block at `0x4a9d480`, leaving `b` completely unchanged as a dangling pointer holding `0x4a9d480`.
-  2. **Reading a pointer's own value vs. dereferencing it:** Line 40 reads the value of the local stack variable `b` (`main`'s stack frame, which is still `LIVE`) and formats it with `%p`. It never dereferences `b` to access the freed heap block. While GCC's static analyzer emits a `-Wuse-after-free` warning on line 40 for using a pointer value after `free`, Valgrind's Memcheck instruments **memory accesses** and therefore reports zero errors on line 40—its first reported error occurs at **line 42** (`b[2]`), where `b` is actually dereferenced to read 4 bytes at `0x4a9d488`.
+  1. free() does not reset pointers: free(a) deallocates the heap block at 0x4a9d480, leaving b completely unchanged as a dangling pointer holding 0x4a9d480.
+  2. Reading a pointer's own value vs. dereferencing it: Line 40 reads the value of the local stack variable b (main's stack frame, which is still `LIVE`) and formats it with %p. It never dereferences b to access the freed heap block. While GCC's static analyzer emits a -Wuse-after-free warning on line 40 for using a pointer value after free, Valgrind's Memcheck instruments memory accesses and therefore reports zero errors on line 40—its first reported error occurs at line 42 (b[2]), where b is actually dereferenced to read 4 bytes at 0x4a9d488.
 
-### Instance 2: Misidentifying the Leaked Object in `heap_example.c`
+### Case 2: Misidentifying the Leaked Object in `heap_example.c`
 
 * **Flawed AI explanation:** Another AI summary stated: *"Valgrind reports 6 bytes definitely lost because `person_free_partial(alice)` fails to free `alice`."*
-* **Why it is incorrect:** `person_free_partial(alice)` **does** call `free(p)` on `alice` (`0x4a9d480`), which is why `Person` (`sizeof(Person) == 16` bytes) is **not** in the leak summary. The leaked 6-byte block (`0x4a9d4d0`) is specifically the heap-allocated `"Alice\0"` string buffer owned by `alice->name`, orphaned because the parent struct was freed before its owned child allocation.
+* **Why it is incorrect:** person_free_partial(alice) does call free(p) on alice (0x4a9d480), which is why Person (sizeof(Person) == 16 bytes) is not in the leak summary. The leaked 6-byte block (0x4a9d4d0) is specifically the heap-allocated "Alice\0" string buffer owned by alice->name, orphaned because the parent struct was freed before its owned child allocation.
 
 ---
 
